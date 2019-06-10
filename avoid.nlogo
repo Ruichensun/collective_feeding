@@ -63,9 +63,6 @@ to avoid-center-setup
 
 end
 
-
-
-
 to avoid-collisions
 
   while [any? turtles-on patch-ahead 1] [
@@ -85,7 +82,6 @@ end
 
 to avoid-center
    while[ pcolor = red] [
-
       bk 1
   ]
   if direction = -1
@@ -114,16 +110,12 @@ to turtle-eat
       set eating 1
   ;set color green
   ;pen-down
-
   ]]
   [ set eating 0
     ;set color blue
     facexy 0 0
     ;set direction -1
   ]
-
-
-
 
 end
 
@@ -132,9 +124,6 @@ to avoid-all
   while [([pcolor] of (patch-ahead 1) = red) or (any? turtles-on patch-ahead 1) or (pcolor = red)]
 
   [
-
-
-
     avoid-center
     avoid-collisions]
 
@@ -565,7 +554,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.0-RC2
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
