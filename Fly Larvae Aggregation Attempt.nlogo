@@ -38,7 +38,7 @@ to create-food-wall ;; patch setup
     set wall? false
     set food? false
     if food-present? [
-      if distancexy 0 0 < 5 [ ;; circular food source. Arbitrary size
+      if distancexy 0 0 < 10 [ ;; circular food source. Arbitrary size
         set food? true
         set pcolor red
       ]
@@ -181,7 +181,7 @@ end
 
 to eat ;; larva procedure
   if (is-patch? patch-ahead vision) and [food?] of patch-ahead vision [
-    set eating-time-left random-normal 40 50 ;; experimentally determined
+    set eating-time-left random-normal 180 240 ;; experimentally determined
     ;; Larva waits for the amount of ticks.
     ;; Eating-time-left is decremented in go
     if eating-time-left < 1 [ set eating-time-left 1 ] ;; to register on the eating frequency graph
@@ -485,7 +485,7 @@ population
 population
 1
 2000
-600.0
+1015.0
 1
 1
 NIL
