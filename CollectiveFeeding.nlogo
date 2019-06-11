@@ -40,14 +40,46 @@ to create-food-wall ;; patch setup
     set wall? false
     set food? false
     if food-present? [
-      if distancexy 0 0 < 5 [ ;; circular food source. Arbitrary size
-        set food? true
-        set pcolor red
+      if ShapeOfFood = "Circle"[
+        if distancexy 0 0 < 5 [ ;; circular food source. Arbitrary size
+          set food? true
+          set pcolor red
+        ]
+      ]
+      if ShapeOfFood = "Square"[
+        if (pxcor < 5 and pxcor > -5) and (pycor < 5 and pycor > -5)[
+          set food? true
+          set pcolor red
+        ]
+      ]
+      if ShapeOfFood = "Triangle"[
+        if ((pxcor < 5 and pxcor > -5) and (pycor < 1 and pycor > 0)) or
+           ((pxcor < 4 and pxcor > -4) and (pycor < 2 and pycor > 1)) or
+           ((pxcor < 3 and pxcor > -3) and (pycor < -2 and pycor > -3)) or
+           ((pxcor < 2 and pxcor > -2) and (pycor < -1 and pycor > -2)) or
+           ((pxcor < 1 and pxcor > -1) and (pycor < 0 and pycor > -1))[
+          set food? true
+          set pcolor red
+        ]
+      ]
+      if ShapeOfFood = "Rectangle"[
+        if (pxcor < 5 and pxcor > -5) and (pycor < 2 and pycor > -2)[
+          set food? true
+          set pcolor red
+        ]
       ]
     ]
-    if distancexy 0 0 >= max-pxcor [ ;; circular wall like a petri dish
-      set wall? true
-      set pcolor gray
+    if ShapeOfArena = "Square" [
+      if (pxcor > 25 ) or (pxcor < -25 ) or (pycor < -25) or (pycor > 25)  [
+        set wall? true
+        set pcolor gray
+      ]
+    ]
+    if ShapeOfArena = "Circle" [
+      if distancexy 0 0 >= max-pxcor  [
+        set wall? true
+        set pcolor gray
+      ]
     ]
   ]
 end
@@ -421,7 +453,7 @@ wiggle-amount
 wiggle-amount
 0
 100
-48.0
+22.0
 1
 1
 NIL
@@ -451,7 +483,7 @@ wiggle-often
 wiggle-often
 0
 100
-15.0
+13.0
 1
 1
 NIL
@@ -545,7 +577,7 @@ population
 population
 1
 2000
-1150.0
+1005.0
 1
 1
 NIL
@@ -614,7 +646,7 @@ satiated-level
 satiated-level
 1
 100
-100.0
+99.0
 1
 1
 NIL
@@ -629,7 +661,7 @@ prob-eating
 prob-eating
 0
 0.5
-0.1
+0.0
 0.05
 1
 NIL
@@ -663,6 +695,26 @@ count turtles with [satiation = 0]
 17
 1
 11
+
+CHOOSER
+949
+32
+1130
+78
+ShapeOfArena
+ShapeOfArena
+"Circle" "Square"
+1
+
+CHOOSER
+948
+81
+1123
+126
+ShapeOfFood
+ShapeOfFood
+"Circle" "Square" "Triangle" "Rectangle"
+1
 
 @#$#@#$#@
 This description applies to the individual model, not the aggregation case.
@@ -1080,7 +1132,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.0-RC2
 @#$#@#$#@
 set population 200
 setup
