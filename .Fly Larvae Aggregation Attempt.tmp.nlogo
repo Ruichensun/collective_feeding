@@ -115,9 +115,13 @@ to decide-to-stop
 end
 
 to decide-to-start
-  if count patches in-cone 1 180 with [food? = true] > 0 [
-    set eating? true
+  ask patches in-cone 1 180 [
+    if food? [
+      let food-nearby true
+    ]
   ]
+  ife count patches in-cone 1 180 with [food? == true]
+  if food-nearby
 end
 
 to move-while-eating
