@@ -55,6 +55,7 @@ end
 to setup-larva
   create-larvae population [
     set color white ;; affects only the traced movement
+    set size 2
     set eating? false
     set satiation 0
     setxy random-xcor random-ycor
@@ -90,11 +91,15 @@ to go
   ;;    stop  ;; larva does not move while it eats
 ;;    ]
     ifelse eating? [
-      set satiation satiation + 1
+      if satiation < 100 [
+        set satiation satiation + 1
+      ]
       decide-to-stop
       move-while-eating
     ][
-      set satiation satiation - 1
+      if satiation > 0 [
+        set satiation satiation - 1
+      ]
       move
       decide-to-start
     ]
@@ -109,19 +114,26 @@ to go
 end
 
 to decide-to-stop
-  if satiation >= satiated_level [
-    set eating? false ;; make this stochastic
+  ifelse satiation >= satiated-level [
+    if random-float 1 < 1 - prob-eating [
+      set eating? false
+    ]
+  ][
+    if random-float 1 < prob-eating [
+      set eating? false
+    ]
   ]
 end
 
 to decide-to-start
-  ask patches in-cone 1 180 [
-    if food? [
-      let food-nearby true
-    ]
+  if count patches in-cone 1 180 with [food? = true] > 0 [
+
+    ;;if random-float 1 < prob-eating [
+    set eating? true
+    ;;]
+
+
   ]
-  ife count patches in-cone 1 180 with [food? == true]
-  if food-nearby
 end
 
 to move-while-eating
@@ -577,15 +589,59 @@ SLIDER
 341
 232
 374
-satiated_level
-satiated_level
+satiated-level
+satiated-level
 1
 100
-51.0
+100.0
 1
 1
 NIL
 HORIZONTAL
+
+SLIDER
+9
+379
+231
+412
+prob-eating
+prob-eating
+0
+0.5
+0.1
+0.05
+1
+NIL
+HORIZONTAL
+
+PLOT
+727
+251
+944
+401
+plot 1
+NIL
+NIL
+0.0
+100.0
+0.0
+50.0
+false
+false
+"set-histogram-num-bars 10" ""
+PENS
+"satiation" 1.0 1 -16777216 true "" "histogram [satiation] of turtles"
+
+MONITOR
+730
+420
+925
+465
+Number of turtles with 0 food
+count turtles with [satiation = 0]
+17
+1
+11
 
 @#$#@#$#@
 This description applies to the individual model, not the aggregation case.
