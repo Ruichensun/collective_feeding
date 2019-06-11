@@ -1,4 +1,4 @@
-extensions [ vid ] ;; video recording
+;;extensions [ vid ] ;; video recording
 breed [ larvae larva ] ;; official name for turtles
 breed [ vectors vector ]
 larvae-own [
@@ -7,7 +7,8 @@ larvae-own [
   xcor-prev
   ycor-prev
   eating? ;; binary state variable - eating or not eating
-  satiation ;; measures how full they are, 0 to 100
+  satiation ;; measures how full they are
+  has-eaten?
 ]
 patches-own [
   wall?
@@ -89,6 +90,7 @@ to setup-larva
     set color white ;; affects only the traced movement
     set size 1
     set eating? false
+    set has-eaten? false
     set satiation 0
     setxy random-xcor random-ycor
     while [ wall? or food? ] [ setxy random-xcor random-ycor ] ;; prevents spawning in wall or food patches
@@ -117,15 +119,15 @@ end
 
 to go
   ask larvae [
-    record-start
+  ;;  record-start
   ;;  if eating-time-left > 0 [
    ;;   set eating-time-left ( eating-time-left - 1)
   ;;    stop  ;; larva does not move while it eats
 ;;    ]
     ifelse eating? [
-      if satiation < 100 [
-        set satiation satiation + 1
-      ]
+      ;;if satiation < 100 [
+      set satiation satiation + 1
+      ;;]
       decide-to-stop
       move-while-eating
     ][
@@ -141,7 +143,7 @@ to go
 
   ]
   manage-vectors
-  if vid:recorder-status = "recording" [ vid:record-view ] ;; for video recording
+  ;;if vid:recorder-status = "recording" [ vid:record-view ] ;; for video recording
   tick
 end
 
@@ -162,6 +164,7 @@ to decide-to-start
 
     ;;if random-float 1 < prob-eating [
     set eating? true
+    set has-eaten? true
     ;;]
 
 
@@ -326,36 +329,36 @@ end
 ;;; VIDEO
 ;; note: from Models Library's Movie Recording Example
 
-to start-recorder
-  carefully [ vid:start-recorder ] [ user-message error-message ]
-end
-
-to reset-recorder
-  let message ( word
-    "If you reset the recorder, the current recording will be lost."
-    "Are you sure you want to reset the recorder?" )
-  if vid:recorder-status = "inactive" or user-yes-or-no? message [
-    vid:reset-recorder
-  ]
-end
-
-to save-recording
-  if vid:recorder-status = "inactive" [
-    user-message "The recorder is inactive. There is nothing to save."
-    stop
-  ]
-  user-message ( word
-    "Choose a name for your movie file (the "
-    ".mp4 extension will be automatically added)." )
-  let path user-new-file
-  if not is-string? path [
-    stop
-  ]
-  carefully [
-    vid:save-recording path
-    user-message (word "Exported movie to " path ".") ]
-  [ user-message error-message ]
-end
+;to start-recorder
+;  carefully [ vid:start-recorder ] [ user-message error-message ]
+;end
+;
+;to reset-recorder
+;  let message ( word
+;    "If you reset the recorder, the current recording will be lost."
+;    "Are you sure you want to reset the recorder?" )
+;  if vid:recorder-status = "inactive" or user-yes-or-no? message [
+;    vid:reset-recorder
+;  ]
+;end
+;
+;to save-recording
+;  if vid:recorder-status = "inactive" [
+;    user-message "The recorder is inactive. There is nothing to save."
+;    stop
+;  ]
+;  user-message ( word
+;    "Choose a name for your movie file (the "
+;    ".mp4 extension will be automatically added)." )
+;  let path user-new-file
+;  if not is-string? path [
+;    stop
+;  ]
+;  carefully [
+;    vid:save-recording path
+;    user-message (word "Exported movie to " path ".") ]
+;  [ user-message error-message ]
+;end
 @#$#@#$#@
 GRAPHICS-WINDOW
 251
@@ -577,7 +580,11 @@ population
 population
 1
 2000
+<<<<<<< Updated upstream
 1005.0
+=======
+996.0
+>>>>>>> Stashed changes
 1
 1
 NIL
@@ -620,7 +627,7 @@ max-larvae-patch
 max-larvae-patch
 1
 6
-1.0
+6.0
 1
 1
 NIL
@@ -633,7 +640,7 @@ SWITCH
 198
 volume-exclusion?
 volume-exclusion?
-0
+1
 1
 -1000
 
@@ -645,8 +652,13 @@ SLIDER
 satiated-level
 satiated-level
 1
+<<<<<<< Updated upstream
 100
 99.0
+=======
+1000
+503.0
+>>>>>>> Stashed changes
 1
 1
 NIL
@@ -661,7 +673,11 @@ prob-eating
 prob-eating
 0
 0.5
+<<<<<<< Updated upstream
 0.0
+=======
+0.05
+>>>>>>> Stashed changes
 0.05
 1
 NIL
@@ -672,30 +688,31 @@ PLOT
 251
 944
 401
-plot 1
+satiation level
 NIL
 NIL
 0.0
-100.0
+1000.0
 0.0
-50.0
+30.0
 false
 false
-"set-histogram-num-bars 10" ""
+"set-histogram-num-bars 50" ""
 PENS
 "satiation" 1.0 1 -16777216 true "" "histogram [satiation] of turtles"
 
 MONITOR
-730
-420
-925
-465
+727
+408
+944
+453
 Number of turtles with 0 food
 count turtles with [satiation = 0]
 17
 1
 11
 
+<<<<<<< Updated upstream
 CHOOSER
 949
 32
@@ -715,6 +732,25 @@ ShapeOfFood
 ShapeOfFood
 "Circle" "Square" "Triangle" "Rectangle"
 1
+=======
+PLOT
+733
+468
+933
+618
+number turtles that have eaten
+NIL
+NIL
+0.0
+100.0
+0.0
+1000.0
+true
+false
+"" ""
+PENS
+"has-eaten" 1.0 0 -16777216 true "" "plot count turtles with [has-eaten? = true]"
+>>>>>>> Stashed changes
 
 @#$#@#$#@
 This description applies to the individual model, not the aggregation case.
@@ -1132,7 +1168,11 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
+<<<<<<< Updated upstream
 NetLogo 6.1.0-RC2
+=======
+NetLogo 6.1.0
+>>>>>>> Stashed changes
 @#$#@#$#@
 set population 200
 setup
@@ -1240,6 +1280,17 @@ ask one-of larvi [ if distancexy 30 0 &lt; 5 [ set count-close ( count-close + 1
     </enumeratedValueSet>
     <enumeratedValueSet variable="random-speeds?">
       <value value="true"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="max-larvae and volume-exclusion" repetitions="5" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="1000"/>
+    <metric>count turtles with [has-eaten? = true]</metric>
+    <steppedValueSet variable="max-larvae-patch" first="1" step="1" last="6"/>
+    <enumeratedValueSet variable="volume-exclusion?">
+      <value value="true"/>
+      <value value="false"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
