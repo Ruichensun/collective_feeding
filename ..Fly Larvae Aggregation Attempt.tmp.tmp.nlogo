@@ -55,7 +55,7 @@ end
 to setup-larva
   create-larvae population [
     set color white ;; affects only the traced movement
-    set size 1
+    set size
     set eating? false
     set satiation 0
     setxy random-xcor random-ycor
@@ -184,12 +184,11 @@ end
 to-report visible [ agentset ] ;; helper method for align-with-obstacle
   report agentset in-cone vision 260 ;; peripheral vision, 260 is arbitrary
 end
+
 to move ;; larva procedure
    wiggle
 
   avoid-obstacle base-speed
-  avoid-larvae base-speed
-
   if not is-obstacle? patch-ahead base-speed [
     fd base-speed
   ]
@@ -421,7 +420,7 @@ wiggle-amount
 wiggle-amount
 0
 100
-48.0
+54.0
 1
 1
 NIL
@@ -451,7 +450,7 @@ wiggle-often
 wiggle-often
 0
 100
-15.0
+23.0
 1
 1
 NIL
@@ -545,7 +544,7 @@ population
 population
 1
 2000
-1150.0
+600.0
 1
 1
 NIL
