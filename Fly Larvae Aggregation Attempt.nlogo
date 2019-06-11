@@ -6,6 +6,7 @@ larvae-own [
   eating-time-left ;; counter that tracks if a larva is eating
   xcor-prev
   ycor-prev
+  eating?
 ]
 patches-own [
   wall?
@@ -38,7 +39,7 @@ to create-food-wall ;; patch setup
     set wall? false
     set food? false
     if food-present? [
-      if distancexy 0 0 < 10 [ ;; circular food source. Arbitrary size
+      if distancexy 0 0 < 5 [ ;; circular food source. Arbitrary size
         set food? true
         set pcolor red
       ]
@@ -81,20 +82,36 @@ end
 to go
   ask larvae [
     record-start
-    if eating-time-left > 0 [
-      set eating-time-left ( eating-time-left - 1)
-      stop  ;; larva does not move while it eats
+  ;;  if eating-time-left > 0 [
+   ;;   set eating-time-left ( eating-time-left - 1)
+  ;;    stop  ;; larva does not move while it eats
+;;    ]
+    ifelse eating? = 1 [
+      decide-to-stop
+      move-while-eating
+      eat
     ]
-    wiggle ;; randomness/noise
-    align-with-obstacle ;; larva tend to follow boundaries
+     [move
+      eat
+    ]
+
+
     ;; larvae-interactions ;; better name?
-    move
-    eat
+
   ]
   manage-vectors
   if vid:recorder-status = "recording" [ vid:record-view ] ;; for video recording
   tick
 end
+
+to decide-to-stop
+
+
+end
+
+to move-while-eating
+end
+
 
 to wiggle ;; larva procedure
   if random 99 < wiggle-often [ ;; wiggles each tick only with probability wiggle-often
@@ -134,6 +151,8 @@ to-report visible [ agentset ] ;; helper method for align-with-obstacle
 end
 
 to move ;; larva procedure
+   wiggle
+
   avoid-obstacle base-speed
   if not is-obstacle? patch-ahead base-speed [
     fd base-speed
@@ -485,7 +504,7 @@ population
 population
 1
 2000
-1015.0
+600.0
 1
 1
 NIL
@@ -961,7 +980,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.0-RC2
+NetLogo 6.0.4
 @#$#@#$#@
 set population 200
 setup
