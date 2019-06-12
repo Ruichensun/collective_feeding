@@ -53,16 +53,6 @@ to create-food-wall ;; patch setup
           set pcolor red
         ]
       ]
-      if ShapeOfFood = "Triangle"[
-        if ((pxcor < 5 and pxcor > -5) and (pycor < 1 and pycor > 0)) or
-           ((pxcor < 4 and pxcor > -4) and (pycor < 2 and pycor > 1)) or
-           ((pxcor < 3 and pxcor > -3) and (pycor < -2 and pycor > -3)) or
-           ((pxcor < 2 and pxcor > -2) and (pycor < -1 and pycor > -2)) or
-           ((pxcor < 1 and pxcor > -1) and (pycor < 0 and pycor > -1))[
-          set food? true
-          set pcolor red
-        ]
-      ]
       if ShapeOfFood = "Rectangle"[
         if (pxcor < 5 and pxcor > -5) and (pycor < 2 and pycor > -2)[
           set food? true
@@ -169,7 +159,7 @@ to move-while-eating
   ; wiggle
   avoid-obstacle base-speed
   align-with-obstacle
-  avoid-larvae base-speed
+  ;avoid-larvae base-speed
   if not is-obstacle? patch-ahead base-speed [
     fd base-speed
   ]
@@ -223,14 +213,13 @@ to move ;; larva procedure
 end
 
 to avoid-larvae [target]
-  if (volume-exclusion? and larvae-ahead? target) = 1
-
-  [ let head-behind heading
-    let head-ahead 361
-    ask larvae-on patch-ahead target[
-      set head-ahead  heading
-      set heading (head-behind + head-ahead) / 2]
-    set heading (head-behind + head-ahead) / 2
+  if (volume-exclusion? and is-larva-ahead? target) = 1 [
+    let head-ahead -1
+    ask larvae-on patch-ahead target
+    [
+       set head-ahead heading
+    ]
+    set heading head-ahead
   ]
 end
 
@@ -267,6 +256,10 @@ to-report is-obstacle? [ target ] ;; helper method for avoid-obstacle
   report (not is-patch? target) or ([ wall? or food? ] of target) or (volume-exclusion? and larvae-ahead? target)
 end
 
+
+to-report is-larva-ahead? [target]
+  report (volume-exclusion? and larvae-ahead? target)
+end
 
 to-report larvae-ahead? [target]
   ifelse (count other larvae-on patch-ahead 1) >= max-larvae-patch [
@@ -627,7 +620,7 @@ SWITCH
 198
 volume-exclusion?
 volume-exclusion?
-1
+0
 1
 -1000
 
@@ -666,13 +659,13 @@ PLOT
 251
 944
 401
-plot 1
+Satiation Level Histogram
 NIL
 NIL
 0.0
-100.0
+120.0
 0.0
-50.0
+2000.0
 false
 false
 "set-histogram-num-bars 10" ""
@@ -715,7 +708,7 @@ PLOT
 138
 1155
 288
-plot 2
+Num of Larvae Ever Fed
 NIL
 NIL
 0.0
