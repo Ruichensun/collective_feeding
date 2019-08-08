@@ -1,3 +1,5 @@
 setwd('D:/collective_feeding/')
-
-data <- read.csv("centerfood_64x.csv", header=F, stringsAsFactors = F)
+library(plotly)
+data <- read.csv("centerfood_64x_annot.csv", header=F, stringsAsFactors = F)
+nfly <- ncol(data) / 6
+for (i in 1:)
